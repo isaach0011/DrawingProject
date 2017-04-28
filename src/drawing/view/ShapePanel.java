@@ -3,24 +3,44 @@ package drawing.view;
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.Shape;
+
 import javax.swing.*;
 import drawing.controller.DrawingController;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.*;
+import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 
 public class ShapePanel extends JPanel
 {
 	private DrawingController baseController;
-	private ArrayList<Rectangle> rectangleList;
+	private ArrayList<ArrayList<Shape>> shapes;
+	private ArrayList<Shape> rectangleList;
+	private ArrayList<Shape> triangleList;
+	private ArrayList<Shape> circleList;
+	private ArrayList<Shape> ellipseList;
+	private ArrayList<Shape> polygonList;
 	
 	public ShapePanel(DrawingController baseController)
 	{
 		super();
 		this.baseController = baseController;
-		rectangleList = new ArrayList<Rectangle>();
+		
+		rectangleList = new ArrayList<Shape>();
+		triangleList = new ArrayList<Shape>();
+		circleList = new ArrayList<Shape>();
+		ellipseList = new ArrayList<Shape>();
+		polygonList = new ArrayList<Shape>();
+		shapes = new ArrayList<ArrayList<Shape>>();
+		shapes.add(circleList);
+		shapes.add(rectangleList);
+		shapes.add(ellipseList);
+		shapes.add(triangleList);
+		shapes.add(polygonList);
 		
 		setupPanel();
 	}
@@ -62,24 +82,131 @@ public class ShapePanel extends JPanel
 		this.setBackground(Color.PINK);
 		
 		Graphics2D drawingGraphics = (Graphics2D) graphics;
-		for(Rectangle currentRectangle : rectangleList)
+		
+		for(ArrayList<Shape> currentList : shapes)
 		{
-			drawingGraphics.setColor(getRandomColor());
+			drawShapes(currentList, drawingGraphics);
+		}
+	}
+	
+	private void drawShapes(ArrayList<Shape> shapeList, Graphics2D graphics)
+	{
+		for(Shape currentShape : shapeList)
+		{
+			graphics.setColor(getRandomColor());
 			int strokeWidth = (int) (Math.random() * 10) + 1;
-			drawingGraphics.setStroke(new BasicStroke(strokeWidth));
+			graphics.setStroke(new BasicStroke(strokeWidth));
 			
 			int randomness = (int) (Math.random() * 35);
 			
 			if(randomness % 5 == 0 || randomness % 7 == 0)
 			{
-				drawingGraphics.fill(currentRectangle);
+				graphics.fill(currentShape);
+				graphics.setColor(getRandomColor());
+				graphics.draw(currentShape);
 			}
 			else
 			{
-				drawingGraphics.draw(currentRectangle);
+				graphics.draw(currentShape);
 			}
-				
 		}
 	}
 	
+	public void addCircles()
+	{
+		if(circleList.size() > 500)
+		{
+			circleList.clear();
+		}
+		
+		for(int index = 0; index < 30; index++)
+		{
+			int radius = (int) (Math.random() * 25) + 2;
+			int xCorner = (int) (Math.random() * this.getWidth() - 15);
+			int yCorner = (int) (Math.random() * this.getHeight() - 15);
+			Ellipse2D.Double current = new Ellipse2D.Double(xCorner, yCorner, radius, radius);
+			circleList.add(current);
+		}
+		this.repaint();
+	}
+	
+	public void addEllipses()
+	{
+		if(circleList.size() > 500)
+		{
+			circleList.clear();
+		}
+		
+		for(int index = 0; index < 30; index++)
+		{
+			int radius = (int)(Math.random() * 25) + 2;
+			int xCorner = (int)(Math.random() * this.getWidth() - 15);
+			int yCorner = (int)(Math.random() * this.getHeight() - 15);
+			Ellipse2D.Double current = new Ellipse2D.Double(xCorner, yCorner, radius, radius);
+			circleList.add(current);
+		}
+		this.repaint();
+	}
+	
+	public void addTriangles()
+	{
+		if(triangleList.size() > 500)
+		{
+			triangleList.clear();
+		}
+		
+		for(int index = 0; index < 30; index++)
+		{
+			int vertexCount = 3;
+			int[] xVertices = new int[vertexCount];
+			int[] yVertices = new int[vertexCount];
+			for(int vertex = 0; vertex < vertexCount; vertex++)
+			{
+				int xCorner = (int)(Math.random() * this.getWidth());
+				int yCorner = (int)(Math.random() * this.getHeight());
+				xVertices[vertex] = xCorner;
+				yVertices[vertex] = yCorner;
+			}
+			Polygon current = new Polygon(xVertices, yVertices, vertexCount);
+			triangleList.add(current);
+		}
+		this.repaint();
+	}
+	
+	public void addPolygons()
+	{
+		if(polygonList.size() > 500)
+		{
+			polygonList.clear();
+		}
+		
+		for(int index = 0; index < 30; index++)
+		{
+			int vertexCount = (int)(Math.random() * 7) + 4;
+			int[] xVertices = new int[vertexCount];
+			int[] yVertices = new int[vertexCount];
+			for(int vertex = 0; vertex < vertexCount; vertex++)
+			{
+				int xCorner = (int)(Math.random() * this.getWidth());
+				int yCorner = (int)(Math.random() * this.getHeight());
+				xVertices[vertex] = xCorner;
+				yVertices[vertex] = yCorner;	
+			}
+			Polygon current = new Polygon(xVertices, yVertices, vertexCount);
+			polygonList.add(current);
+		}
+		this.repaint();
+	}
+	
+	public void reset()
+	{
+		for(int index = 0; index < shapes.size(); index++)
+			
+		{
+			shapes.get(index).clear();
+		}
+		this.setBackground(getRandomColor());
+		this.repaint();
+	}
+
 }
