@@ -25,7 +25,7 @@ public class GraphPanel extends JPanel
 	}
 	
 	@Override
-	protected void paintCompenent(Graphics basic)
+	protected void paintComponent(Graphics basic)
 	{
 		graph.clear();
 		this.setBackground(new Color(128, 43, 226));
