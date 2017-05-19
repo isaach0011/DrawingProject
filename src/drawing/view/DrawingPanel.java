@@ -11,6 +11,7 @@ public class DrawingPanel extends JPanel
 {
 	private DrawingController baseController;
 	private ShapePanel shapePanel;
+	private GraphPanel graphPanel;
 	private DrawingFrame baseFrame;
 	private SpringLayout baseLayout;
 	private JButton rectButton;
@@ -28,13 +29,18 @@ public class DrawingPanel extends JPanel
 		super();
 		this.baseController = baseController;
 		this.shapePanel = new ShapePanel(baseController);
+		this.graphPanel = new GraphPanel(setupArray());
 		this.baseLayout = new SpringLayout();
+		baseLayout.putConstraint(SpringLayout.SOUTH, graphPanel, 0, SpringLayout.SOUTH, shapePanel);
+		baseLayout.putConstraint(SpringLayout.EAST, graphPanel, -6, SpringLayout.WEST, shapePanel);
 		this.title = new JLabel("Drawing with Java!");
 		this.rectButton = new JButton("Draw Rectangles");
+		baseLayout.putConstraint(SpringLayout.WEST, graphPanel, 0, SpringLayout.WEST, rectButton);
 		this.circButton = new JButton("Draw Circles");
 		this.elliButton = new JButton("Draw Ellipses");
 		this.triButton = new JButton("Draw Triangles");
 		this.polyButton = new JButton("Draw Polygons");
+		baseLayout.putConstraint(SpringLayout.NORTH, graphPanel, 23, SpringLayout.SOUTH, polyButton);
 		this.resetButton = new JButton("Reset");
 
 
@@ -53,6 +59,7 @@ public class DrawingPanel extends JPanel
 		
 		title.setFont(new Font("BigNoodleTitling", Font.PLAIN, 50));
 		this.add(shapePanel);
+		this.add(graphPanel);
 		this.add(rectButton);
 		this.add(circButton);
 		this.add(elliButton);
@@ -131,5 +138,17 @@ public class DrawingPanel extends JPanel
 				shapePanel.reset();
 			}
 		});
+	}
+	
+	public int [] setupArray()
+	{
+		int length = (int) (Math.random() * 10) + 3;
+		int [] randomArray = new int[length];
+		for(int index = 0; index < length; index++)
+		{
+			randomArray [index] = (int) (Math.random() * 50) + 3;
+		}
+		return randomArray;
+		
 	}
 }
